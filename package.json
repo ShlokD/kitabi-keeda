@@ -1,0 +1,39 @@
+{
+  "private": true,
+  "name": "kitabi-keeda",
+  "version": "0.0.0",
+  "license": "MIT",
+  "scripts": {
+    "build": "preact build",
+    "serve": "sirv build --cors --single",
+    "dev": "preact watch",
+    "lint": "eslint src",
+    "test:unit": "jest",
+    "cy:run": "cypress run",
+    "test:integration": "start-server-and-test serve http://localhost:5000 cy:run",
+    "test": "npm run test:unit && npm run test:integration"
+  },
+  "eslintConfig": {
+    "extends": "eslint-config-synacor"
+  },
+  "eslintIgnore": [
+    "build/*"
+  ],
+  "devDependencies": {
+    "cypress": "^4.3.0",
+    "eslint": "^6.0.1",
+    "eslint-config-synacor": "^3.0.4",
+    "jest": "^25.3.0",
+    "preact-cli": "^3.0.0-rc.6",
+    "sirv-cli": "^0.4.5",
+    "start-server-and-test": "^1.10.11"
+  },
+  "dependencies": {
+    "preact": "^10.1.0",
+    "preact-async-route": "^2.2.1",
+    "preact-render-to-string": "^5.1.2",
+    "preact-router": "^3.2.1",
+    "tachyons": "^4.11.1",
+    "unistore": "^3.5.1"
+  }
+}
