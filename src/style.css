@@ -8,8 +8,30 @@ body {
 }
 
 body {
-  background-color: #f7f9fb;
+  background-color: #fcfcfc;
   padding: 0.5em;
+}
+
+.animate-opacity {
+  transition: opacity 0.8s ease-in-out;
+}
+
+.search-bar {
+  background-image: url("../assets/magnifying-glass.svg");
+  background-position: 10px 10px;
+  background-repeat: no-repeat;
+}
+
+.search-bar::placeholder {
+  padding-left: 24px;
+}
+
+.search-bar:focus {
+  background-size: 0 0;
+}
+
+.search-bar:focus::placeholder {
+  color: transparent;
 }
 
 @import "~tachyons/css/tachyons.min.css";
