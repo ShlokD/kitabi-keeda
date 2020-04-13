@@ -14,4 +14,10 @@ describe("Home Page", () => {
   it("renders search input", () => {
     cy.get("[data-test=search-input]").should("have.length", 1);
   });
+
+  it("renders 10 book items on search", () => {
+    cy.get("[data-test=search-input]").type("Murakami{enter}");
+    cy.wait(5000);
+    cy.get("[data-test=book-list-item]").should("have.length", 10);
+  });
 });

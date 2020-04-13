@@ -16,18 +16,8 @@ body {
   transition: opacity 0.8s ease-in-out;
 }
 
-.search-bar {
-  background-image: url("../assets/magnifying-glass.svg");
-  background-position: 10px 10px;
-  background-repeat: no-repeat;
-}
-
 .search-bar::placeholder {
   padding-left: 24px;
-}
-
-.search-bar:focus {
-  background-size: 0 0;
 }
 
 .search-bar:focus::placeholder {
