@@ -3,6 +3,9 @@ import { useState } from "preact/hooks";
 import { connect } from "unistore/preact";
 import actions from "./domain/actions";
 
+const LOADING = "LOADING";
+const READY = "READY";
+
 const useInput = () => {
   const [text, setText] = useState("");
   const onEnterText = (ev) => setText(ev.target.value);
@@ -28,27 +31,19 @@ const SearchBar = ({ handleSubmit }) => {
   );
 };
 
-const FeaturedImage = () => (
-  <img
-    className="w-100 w-80-ns pa2 shadow-4"
-    data-test="featured-image"
-    src="https://images.unsplash.com/photo-1568047571827-8c46fe611345?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1950&q=80"
-  />
-);
-
 class BooksList extends Component {
   render({ books }) {
     return (
-      <div className="flex flex-wrap w-80">
+      <div className="flex flex-wrap items-center justify-center">
         {books.map(({ title, by, imageUrl }) => {
           return (
             <div
               data-test="book-list-item"
-              className="flex flex-column pa2 w-33"
+              className="flex flex-row pa2 max-w-33 shadow-4 bg-white ma2"
             >
-              <img className="h-50" src={imageUrl} />
-              <div>
-                <p className="b f4">{title}</p>
+              <img className="h-100" src={imageUrl} />
+              <div className="flex flex-column mv4 pa4-ns tc">
+                <p className="b f3 ma0">{title}</p>
                 <p className="f5">By:{by}</p>
               </div>
             </div>
@@ -59,16 +54,94 @@ class BooksList extends Component {
   }
 }
 
+const PaginationButtons = ({
+  showNextButton,
+  showPreviousButton,
+  stepSize,
+  handlePagination,
+}) => {
+  return (
+    <div className="flex flex-wrap items-center justify-center mv4">
+      {showPreviousButton && (
+        <button
+          className="b--none bg-washed-blue pv3 ph5 shadow-3 mh2 f3 mv2 mv0-ns"
+          data-test="prev-page-button"
+          onClick={() => handlePagination(-stepSize)}
+        >
+          Previous
+        </button>
+      )}
+      {showNextButton && (
+        <button
+          className="b--none bg-washed-blue shadow-3 pv3 ph5 mh2 f3 mv2 mv0-ns"
+          data-test="next-page-button"
+          onClick={() => handlePagination(stepSize)}
+        >
+          Next
+        </button>
+      )}
+    </div>
+  );
+};
+
 class Home extends Component {
-  render({ books = [], fetchBooks }) {
+  constructor(props) {
+    super(props);
+    this.state = {
+      searchTerm: "",
+      searchIndex: 0,
+      page: 0,
+      uiState: "READY",
+    };
+
+    this.stepSize = 10;
+
+    this.handleSubmit = this.handleSubmit.bind(this);
+    this.handlePagination = this.handlePagination.bind(this);
+  }
+
+  handleSubmit(searchTerm) {
+    this.setState({ searchTerm, searchIndex: 0, page: 0, uiState: LOADING });
+    this.props
+      .fetchBooks({ searchTerm, searchIndex: this.state.searchIndex })
+      .then(() => this.setState({ uiState: READY }));
+  }
+
+  handlePagination(increment) {
+    const { searchTerm, searchIndex } = this.state;
+    const newSearchIndex = searchIndex + increment;
+    this.setState({
+      searchIndex: newSearchIndex,
+      page: newSearchIndex / this.stepSize,
+      uiState: LOADING,
+    });
+    window.scrollTo(0, 0);
+    this.props
+      .fetchBooks({ searchTerm, searchIndex: newSearchIndex })
+      .then(() => this.setState({ uiState: "READY" }));
+  }
+
+  render({ books = [] }) {
     return (
       <div className="flex flex-column h-100 items-center pa3">
         <h1 data-test="page-title" className="f2 tc ma2">
           KITABI KEEDA
         </h1>
-        <FeaturedImage />
-        <SearchBar handleSubmit={fetchBooks} />
-        <BooksList books={books} />
+        <SearchBar handleSubmit={this.handleSubmit} />
+        <div
+          className={`spinner ${
+            this.state.uiState === "LOADING" ? "db" : "dn"
+          }`}
+        ></div>
+        <div className={`${this.state.uiState === READY ? "o-100" : "o-60"}`}>
+          <BooksList books={books} />
+          <PaginationButtons
+            stepSize={this.stepSize}
+            showNextButton={books.length > 0}
+            showPreviousButton={this.state.page > 0}
+            handlePagination={this.handlePagination}
+          />
+        </div>
       </div>
     );
   }

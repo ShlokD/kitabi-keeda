@@ -39,4 +39,21 @@ describe("Transform Book Info", () => {
     expected = {};
     expect(actual).toEqual(expected);
   });
+
+  it("transforms partial response accordingly", () => {
+    actual = transformBookInfo({
+      items: [
+        {
+          volumeInfo: {
+            title: "The Japan Book",
+            imageLinks: { thumbnail: "some-url" },
+          },
+        },
+      ],
+    });
+    expected = [
+      { title: "The Japan Book", by: "Anonymous", imageUrl: "some-url" },
+    ];
+    expect(actual).toEqual(expected);
+  });
 });

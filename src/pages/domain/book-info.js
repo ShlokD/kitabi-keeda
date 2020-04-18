@@ -1,9 +1,13 @@
+const DEFAULT_IMAGE_URL =
+  "https://images.unsplash.com/photo-1543002588-bfa74002ed7e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=634&q=80";
+
 const transformBook = (book = {}) => {
   const { volumeInfo = {} } = book;
+  const { title = "", authors = ["Anonymous"], imageLinks = {} } = volumeInfo;
   return {
-    title: volumeInfo.title,
-    by: volumeInfo.authors.join(","),
-    imageUrl: volumeInfo.imageLinks.thumbnail,
+    title,
+    by: authors.join(","),
+    imageUrl: imageLinks.thumbnail || DEFAULT_IMAGE_URL,
   };
 };
 
