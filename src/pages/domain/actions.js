@@ -10,8 +10,13 @@ const actions = (store) => {
     store.setState({ books: transformBooksInfo(booksData) });
   }
 
+  const setSelectedBook = (index) => {
+    store.setState({ selectedBook: index });
+  };
+
   return {
     fetchBooks,
+    setSelectedBook,
   };
 };
 

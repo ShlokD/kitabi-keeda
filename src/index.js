@@ -12,14 +12,20 @@ import HomePage from "./pages/home";
 const store = createStore(initialStore());
 
 export default class App extends Component {
+  constructor(props) {
+    super(props);
+  }
+
   render() {
     return (
       <Provider store={store}>
         <Router>
           <HomePage path="/" />
           <AsyncRoute
-            path="/book/:bookid"
-            getComponent={() => import("./pages/book-details").then(module => module.default)}
+            path="/book/:bookId"
+            getComponent={() =>
+              import("./pages/book-details").then((module) => module.default)
+            }
             loading={() => <div>Loading...</div>}
           />
         </Router>

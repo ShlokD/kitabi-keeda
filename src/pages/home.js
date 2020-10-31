@@ -1,5 +1,7 @@
 import { Component } from "preact";
 import { useState } from "preact/hooks";
+import { Link } from "preact-router/match";
+
 import { connect } from "unistore/preact";
 import actions from "./domain/actions";
 
@@ -31,28 +33,27 @@ const SearchBar = ({ handleSubmit }) => {
   );
 };
 
-class BooksList extends Component {
-  render({ books }) {
-    return (
-      <div className="flex flex-wrap items-center justify-center">
-        {books.map(({ title, by, imageUrl }) => {
-          return (
-            <div
-              data-test="book-list-item"
-              className="flex flex-row pa2 max-w-33 shadow-4 bg-white ma2"
-            >
-              <img className="h-100" src={imageUrl} />
-              <div className="flex flex-column mv4 pa4-ns tc">
-                <p className="b f3 ma0">{title}</p>
-                <p className="f5">By:{by}</p>
-              </div>
+const BooksList = ({ books }) => {
+  return (
+    <div className="flex flex-wrap items-center justify-center">
+      {books.map(({ title, by, imageUrl }, index) => {
+        return (
+          <Link
+            data-test="book-list-item"
+            href={`/book/${index}`}
+            className="flex flex-row pa2 no-underline black max-w-33 shadow-4 bg-white ma2"
+          >
+            <img className="h-100" src={imageUrl} />
+            <div className="flex flex-column mv4 pa4-ns tc">
+              <p className="b f3 ma0">{title}</p>
+              <p className="f5">By:{by}</p>
             </div>
-          );
-        })}
-      </div>
-    );
-  }
-}
+          </Link>
+        );
+      })}
+    </div>
+  );
+};
 
 const PaginationButtons = ({
   showNextButton,
@@ -91,7 +92,7 @@ class Home extends Component {
       searchTerm: "",
       searchIndex: 0,
       page: 0,
-      uiState: "READY",
+      UIState: "READY",
     };
 
     this.stepSize = 10;
